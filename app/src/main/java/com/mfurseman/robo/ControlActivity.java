@@ -2,7 +2,7 @@ package com.mfurseman.robo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,11 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VerticalSeekBar;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class ControlActivity extends Activity {
+
+public class ControlActivity extends Activity implements SocketConnectionAdapter {
+
+    public static final String TAG = "Robo";
+
+    private ArrayList<String> commands = new ArrayList<String>();
+    private OnConnection onConnection;
+    private OnCommandReceived onCommandReceived;
+    private Handler handler;
 
     /* Bind Android views to local variables */
     private VerticalSeekBar leftMotorSeekbar;
@@ -72,6 +81,8 @@ public class ControlActivity extends Activity {
                 setOnBoardLedOff();
             }
         });
+
+        handler = new Handler();
     }
 
     @Override
@@ -120,18 +131,17 @@ public class ControlActivity extends Activity {
     }
 
     private void connect() {
-        //TODO: Attempt to connect to a socket
         String address = addressEditText.getText().toString();
-        Log.d("mfurseman", "Connect" + address);
-        Toast.makeText(this, "Connection to " + address + " failed.", Toast.LENGTH_SHORT).show();
+        RoboClient roboClient = new RoboClient(address, this);
+        new Thread(roboClient).start();
     }
 
     private void setOnBoardLedOn() {
-        //TODO: Send a command down the socket
+        commands.add("b"); // TODO: Move command creation out
     }
 
     private void setOnBoardLedOff() {
-        //TODO: Send another command down the socket
+        commands.add("c");
     }
 
     private int translateSeekbarToMotor(int seekbar) {
@@ -140,5 +150,52 @@ public class ControlActivity extends Activity {
 
     private int translateMotorToSeekbar(int motor) {
         return motor + 128;
+    }
+
+    private class OnConnection implements Runnable {
+        @Override
+        public void run() {
+            onButton.setEnabled(true);
+            offButton.setEnabled(true);
+            coastButton.setEnabled(true);
+            stopButton.setEnabled(true);
+            leftMotorTextView.setEnabled(true);
+            leftMotorSeekbar.setEnabled(true);
+            rightMotorTextView.setEnabled(true);
+            rightMotorSeekbar.setEnabled(true);
+        }
+    }
+
+    private class OnCommandReceived implements Runnable {
+        @Override
+        public void run() {
+            // TODO: Something with the received commands
+        }
+    }
+
+    @Override
+    public Handler getHandler() {
+        return handler;
+    }
+
+    @Override
+    public Runnable getOnConnection() {
+        if(onConnection == null) {
+            onConnection = new OnConnection();
+        }
+        return onConnection;
+    }
+
+    @Override
+    public Runnable getOnCommandReceived() {
+        if(onCommandReceived == null) {
+            onCommandReceived = new OnCommandReceived();
+        }
+        return onCommandReceived;
+    }
+
+    @Override
+    public List<String> getCommandList() {
+        return commands;
     }
 }

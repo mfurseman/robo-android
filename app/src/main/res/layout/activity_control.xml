@@ -27,6 +27,7 @@
                 android:id="@+id/connect_button"/>
 
             <Button
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/led_on"
@@ -34,6 +35,7 @@
                 style="?android:attr/buttonStyleSmall" />
 
             <Button
+                android:enabled="false"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,6 +51,7 @@
             android:layout_marginBottom="0dp">
 
             <TextView
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -61,6 +64,7 @@
                 android:layout_weight="1"/>
 
             <TextView
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -75,6 +79,7 @@
             android:id="@+id/ll">
 
             <android.widget.VerticalSeekBar
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/left_motor_seekbar"
@@ -91,6 +96,7 @@
                 android:gravity="center_vertical">
 
                 <Button
+                    android:enabled="false"
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -99,6 +105,7 @@
                     android:layout_gravity="center" />
 
                 <Button
+                    android:enabled="false"
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,6 +116,7 @@
             </LinearLayout>
 
             <android.widget.VerticalSeekBar
+                android:enabled="false"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/right_motor_seekbar"
