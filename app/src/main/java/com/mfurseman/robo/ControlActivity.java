@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.VerticalSeekBar;
 
 
 public class ControlActivity extends Activity {
@@ -12,8 +15,15 @@ public class ControlActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control);
-    }
 
+        bindSeekbarToTextView(
+                (VerticalSeekBar) findViewById(R.id.left_motor_seekbar),
+                (TextView)  findViewById(R.id.left_motor_textview));
+
+        bindSeekbarToTextView(
+                (VerticalSeekBar) findViewById(R.id.right_motor_seekbar),
+                (TextView)  findViewById(R.id.right_motor_textview));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -35,5 +45,15 @@ public class ControlActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void bindSeekbarToTextView(final SeekBar seekBar, final TextView textView) {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                textView.setText(Integer.toString(i));
+            }
+        });
     }
 }
