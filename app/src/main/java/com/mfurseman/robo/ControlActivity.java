@@ -24,6 +24,8 @@ public class ControlActivity extends Activity {
     private Button coastButton;
     private Button stopButton;
     private Button connectButton;
+    private Button onButton;
+    private Button offButton;
     private EditText addressEditText;
 
     @Override
@@ -38,6 +40,8 @@ public class ControlActivity extends Activity {
         coastButton = (Button) findViewById(R.id.coast_button);
         stopButton = (Button) findViewById(R.id.stop_button);
         connectButton = (Button) findViewById(R.id.connect_button);
+        onButton = (Button) findViewById(R.id.on_button);
+        offButton = (Button) findViewById(R.id.off_button);
         addressEditText = (EditText) findViewById(R.id.address_edit_text);
 
         bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView);
@@ -56,6 +60,16 @@ public class ControlActivity extends Activity {
         connectButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 connect();
+            }
+        });
+        onButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                setOnBoardLedOn();
+            }
+        });
+        offButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                setOnBoardLedOff();
             }
         });
     }
@@ -110,6 +124,14 @@ public class ControlActivity extends Activity {
         String address = addressEditText.getText().toString();
         Log.d("mfurseman", "Connect" + address);
         Toast.makeText(this, "Connection to " + address + " failed.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void setOnBoardLedOn() {
+        //TODO: Send a command down the socket
+    }
+
+    private void setOnBoardLedOff() {
+        //TODO: Send another command down the socket
     }
 
     private int translateSeekbarToMotor(int seekbar) {
