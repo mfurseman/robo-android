@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.VerticalSeekBar;
@@ -12,23 +14,31 @@ import android.widget.VerticalSeekBar;
 public class ControlActivity extends Activity {
 
     /* Bind Android views to local variables */
-    private SeekBar leftMotorSeekbar;
-    private SeekBar rightMotorSeekbar;
+    private VerticalSeekBar leftMotorSeekbar;
+    private VerticalSeekBar rightMotorSeekbar;
     private TextView leftMotorTextView;
     private TextView rightMotorTextView;
+    private Button coastButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control);
 
-        leftMotorSeekbar = (SeekBar) findViewById(R.id.left_motor_seekbar);
-        rightMotorSeekbar = (SeekBar) findViewById(R.id.right_motor_seekbar);
+        leftMotorSeekbar = (VerticalSeekBar) findViewById(R.id.left_motor_seekbar);
+        rightMotorSeekbar = (VerticalSeekBar) findViewById(R.id.right_motor_seekbar);
         leftMotorTextView = (TextView)  findViewById(R.id.left_motor_textview);
         rightMotorTextView = (TextView) findViewById(R.id.right_motor_textview);
+        coastButton = (Button) findViewById(R.id.coast_button);
 
         bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView);
         bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView);
+
+        coastButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                coast();
+            }
+        });
     }
 
     @Override
@@ -58,12 +68,23 @@ public class ControlActivity extends Activity {
             public void onStartTrackingTouch(SeekBar seekBar) {}
             public void onStopTrackingTouch(SeekBar seekBar) {}
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                // TODO: Send motor value to server
                 textView.setText(Integer.toString(translateSeekbarToMotor(i)));
             }
         });
     }
+
+    private void coast() {
+        // TODO: Actually send coast command to server
+        leftMotorSeekbar.setPosition(translateMotorToSeekbar(0));
+        rightMotorSeekbar.setPosition(translateMotorToSeekbar(0));
+    }
+
     private int translateSeekbarToMotor(int seekbar) {
         return seekbar - 128;
     }
 
+    private int translateMotorToSeekbar(int motor) {
+        return motor + 128;
+    }
 }

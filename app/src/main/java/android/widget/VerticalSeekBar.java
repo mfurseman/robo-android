@@ -55,4 +55,14 @@ public class VerticalSeekBar extends SeekBar {
         }
         return true;
     }
+
+    /**
+     * Sets the value of the seekbar position.
+     * Once updated, the touch listener is also called.
+     * @param position
+     */
+    public void setPosition(int position) {
+        setProgress(position);
+        onSizeChanged(getWidth(), getHeight(), 0, 0);
+    }
 }

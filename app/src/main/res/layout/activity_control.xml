@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/motor_coast"
-                    android:id="@+id/coat_button"
+                    android:id="@+id/coast_button"
                     android:layout_gravity="center" />
 
                 <Button
