@@ -11,18 +11,24 @@ import android.widget.VerticalSeekBar;
 
 public class ControlActivity extends Activity {
 
+    /* Bind Android views to local variables */
+    private SeekBar leftMotorSeekbar;
+    private SeekBar rightMotorSeekbar;
+    private TextView leftMotorTextView;
+    private TextView rightMotorTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control);
 
-        bindSeekbarToTextView(
-                (VerticalSeekBar) findViewById(R.id.left_motor_seekbar),
-                (TextView)  findViewById(R.id.left_motor_textview));
+        leftMotorSeekbar = (SeekBar) findViewById(R.id.left_motor_seekbar);
+        rightMotorSeekbar = (SeekBar) findViewById(R.id.right_motor_seekbar);
+        leftMotorTextView = (TextView)  findViewById(R.id.left_motor_textview);
+        rightMotorTextView = (TextView) findViewById(R.id.right_motor_textview);
 
-        bindSeekbarToTextView(
-                (VerticalSeekBar) findViewById(R.id.right_motor_seekbar),
-                (TextView)  findViewById(R.id.right_motor_textview));
+        bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView);
+        bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView);
     }
 
     @Override
@@ -52,8 +58,12 @@ public class ControlActivity extends Activity {
             public void onStartTrackingTouch(SeekBar seekBar) {}
             public void onStopTrackingTouch(SeekBar seekBar) {}
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                textView.setText(Integer.toString(i));
+                textView.setText(Integer.toString(translateSeekbarToMotor(i)));
             }
         });
     }
+    private int translateSeekbarToMotor(int seekbar) {
+        return seekbar - 128;
+    }
+
 }

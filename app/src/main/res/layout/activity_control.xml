@@ -80,7 +80,8 @@
                 android:id="@+id/left_motor_seekbar"
                 android:layout_weight="0"
                 android:layout_marginStart="40dp"
-                android:indeterminate="false" />
+                android:indeterminate="false"
+                android:max="256" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -112,7 +113,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/right_motor_seekbar"
                 android:layout_weight="0"
-                android:layout_marginEnd="40dp" />
+                android:layout_marginEnd="40dp"
+                android:max="256" />
 
         </LinearLayout>
     </LinearLayout>
