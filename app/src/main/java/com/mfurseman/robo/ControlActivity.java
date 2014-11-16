@@ -2,12 +2,15 @@ package com.mfurseman.robo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VerticalSeekBar;
 
 
@@ -19,6 +22,9 @@ public class ControlActivity extends Activity {
     private TextView leftMotorTextView;
     private TextView rightMotorTextView;
     private Button coastButton;
+    private Button stopButton;
+    private Button connectButton;
+    private EditText addressEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,9 @@ public class ControlActivity extends Activity {
         leftMotorTextView = (TextView)  findViewById(R.id.left_motor_textview);
         rightMotorTextView = (TextView) findViewById(R.id.right_motor_textview);
         coastButton = (Button) findViewById(R.id.coast_button);
+        stopButton = (Button) findViewById(R.id.stop_button);
+        connectButton = (Button) findViewById(R.id.connect_button);
+        addressEditText = (EditText) findViewById(R.id.address_edit_text);
 
         bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView);
         bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView);
@@ -37,6 +46,16 @@ public class ControlActivity extends Activity {
         coastButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 coast();
+            }
+        });
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                stop();
+            }
+        });
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                connect();
             }
         });
     }
@@ -78,6 +97,19 @@ public class ControlActivity extends Activity {
         // TODO: Actually send coast command to server
         leftMotorSeekbar.setPosition(translateMotorToSeekbar(0));
         rightMotorSeekbar.setPosition(translateMotorToSeekbar(0));
+    }
+
+    private void stop() {
+        // TODO: Send stop command to server
+        leftMotorSeekbar.setPosition(translateMotorToSeekbar(0));
+        rightMotorSeekbar.setPosition(translateMotorToSeekbar(0));
+    }
+
+    private void connect() {
+        //TODO: Attempt to connect to a socket
+        String address = addressEditText.getText().toString();
+        Log.d("mfurseman", "Connect" + address);
+        Toast.makeText(this, "Connection to " + address + " failed.", Toast.LENGTH_SHORT).show();
     }
 
     private int translateSeekbarToMotor(int seekbar) {

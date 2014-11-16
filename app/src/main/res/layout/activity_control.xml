@@ -15,7 +15,7 @@
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/address_text"
+                android:id="@+id/address_edit_text"
                 android:hint="@string/address_hint"
                 android:layout_weight="1" />
 
