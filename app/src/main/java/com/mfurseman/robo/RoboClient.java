@@ -36,6 +36,8 @@ public class RoboClient implements Runnable {
             reader.start();
 
             while(socket.isConnected()) {
+                // Only check at refresh rate
+                Thread.sleep(1000 / 60, 0);
                 synchronized (socketConnectionAdapter.getCommandList()) {
                     while (!socketConnectionAdapter.getCommandList().isEmpty()) {
                         String command = socketConnectionAdapter.getCommandList().remove(0);
@@ -46,7 +48,10 @@ public class RoboClient implements Runnable {
             }
             reader.interrupt();
         } catch (IOException e) {
-            Log.e(ControlActivity.TAG, "Failed to connect");
+            Log.w(ControlActivity.TAG, "No connection");
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            Log.w(ControlActivity.TAG, "Disconnected");
             e.printStackTrace();
         }
     }
@@ -65,9 +70,8 @@ public class RoboClient implements Runnable {
         public void run() {
             try {
                 while(true) {
-                    char[] buffer = new char[3];
-                    int response = 0;
-                    response = reader.read(buffer);
+                    char[] buffer = new char[5];
+                    int response = reader.read(buffer);
                     Log.d(ControlActivity.TAG,
                             "Read from server: " + response + " : " + String.valueOf(buffer));
                 }

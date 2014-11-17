@@ -155,6 +155,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     private class OnConnection implements Runnable {
         @Override
         public void run() {
+            addressEditText.setEnabled(false);
+            connectButton.setEnabled(false);
             onButton.setEnabled(true);
             offButton.setEnabled(true);
             coastButton.setEnabled(true);
