@@ -109,25 +109,28 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
 
     private void bindSeekbarToTextView(final SeekBar seekBar, final TextView textView) {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            private int position = 0;
             public void onStartTrackingTouch(SeekBar seekBar) {}
-            public void onStopTrackingTouch(SeekBar seekBar) {}
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                textView.setText(Integer.toString(translateSeekbarToMotor(position)));
                 // TODO: Send motor value to server
-                textView.setText(Integer.toString(translateSeekbarToMotor(i)));
+            }
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                position = i;
             }
         });
     }
 
     private void coast() {
         // TODO: Actually send coast command to server
-        leftMotorSeekbar.setPosition(translateMotorToSeekbar(0));
-        rightMotorSeekbar.setPosition(translateMotorToSeekbar(0));
+        leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
     }
 
     private void stop() {
         // TODO: Send stop command to server
-        leftMotorSeekbar.setPosition(translateMotorToSeekbar(0));
-        rightMotorSeekbar.setPosition(translateMotorToSeekbar(0));
+        leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
     }
 
     private void connect() {
