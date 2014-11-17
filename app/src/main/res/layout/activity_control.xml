@@ -100,6 +100,8 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="25dp"
                     android:text="@string/motor_coast"
                     android:id="@+id/coast_button"
                     android:layout_gravity="center" />
@@ -109,9 +111,18 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:text="@string/motor_stop"
                     android:id="@+id/stop_button"
                     android:layout_gravity="center" />
+
+                <android.widget.VerticalSeekBar
+                    android:enabled="false"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/stop_motor_seekbar"
+                    android:max="256" />
 
             </LinearLayout>
 
