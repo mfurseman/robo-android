@@ -146,8 +146,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         synchronized (commands) {
             commands.add("gh");
         }
-        leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
-        rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        zeroSeekbar();
     }
 
     private void stop() {
@@ -155,10 +154,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         synchronized (commands) {
             commands.add("i" + brakePower + "j" + brakePower);
         }
-        leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
-        rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
-        leftMotorTextView.setText("0");
-        rightMotorTextView.setText("0");
+        zeroSeekbar();
     }
 
     private void connect() {
@@ -187,6 +183,13 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         return motor + 128;
     }
 
+    private void zeroSeekbar() {
+        leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        leftMotorTextView.setText("0");
+        rightMotorTextView.setText("0");
+    }
+
     private class OnConnection implements Runnable {
         @Override
         public void run() {
@@ -201,8 +204,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
             rightMotorTextView.setEnabled(true);
             rightMotorSeekbar.setEnabled(true);
             stopMotorSeekbar.setEnabled(true);
-            leftMotorTextView.setText("0");
-            rightMotorTextView.setText("0");
+            zeroSeekbar();
         }
     }
 
@@ -220,10 +222,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
             rightMotorTextView.setEnabled(false);
             rightMotorSeekbar.setEnabled(false);
             stopMotorSeekbar.setEnabled(false);
-            leftMotorTextView.setText("0");
-            rightMotorTextView.setText("0");
-            leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
-            rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+            zeroSeekbar();
         }
     }
 
