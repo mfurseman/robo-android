@@ -57,8 +57,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
 
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
-        bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView);
-        bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView);
+        bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView, "e");
+        bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView, "f");
         stopMotorSeekbar.setEnabled(false);
 
         coastButton.setOnClickListener(new View.OnClickListener() {
@@ -112,8 +112,10 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         return super.onOptionsItemSelected(item);
     }
 
-    private void bindSeekbarToTextView(final SeekBar seekBar, final TextView textView) {
+    private void bindSeekbarToTextView(
+            final VerticalSeekBar seekBar, final TextView textView, final String commandId) {
         seekBar.setEnabled(false);
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             private int position = translateMotorToSeekbar(0);
             private int lastPosition = translateMotorToSeekbar(0);
@@ -128,7 +130,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
                 }
 
                 textView.setText(Integer.toString(translateSeekbarToMotor(position)));
-                // TODO: Send motor value to server
+                commands.add(commandId + (char)seekBar.getProgress());
                 lastPosition = position;
             }
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -138,13 +140,14 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     }
 
     private void coast() {
-        // TODO: Actually send coast command to server
+        commands.add("gh");
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
     }
 
     private void stop() {
-        // TODO: Send stop command to server
+        char brakePower = (char)stopMotorSeekbar.getProgress();
+        commands.add("i" + brakePower + "j" + brakePower);
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
     }
@@ -156,7 +159,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     }
 
     private void setOnBoardLedOn() {
-        commands.add("b"); // TODO: Move command creation out
+        commands.add("b");
     }
 
     private void setOnBoardLedOff() {
