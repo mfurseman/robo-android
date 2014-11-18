@@ -15,6 +15,8 @@ public class RoboClient implements Runnable {
     private final int port = 5678;
     private final SocketConnectionAdapter socketConnectionAdapter;
 
+    protected boolean readerIsConnected = true;
+
     RoboClient(String address, SocketConnectionAdapter socketConnectionAdapter) {
         this.address = address;
         this.socketConnectionAdapter = socketConnectionAdapter;
@@ -35,7 +37,7 @@ public class RoboClient implements Runnable {
             Thread reader = new Thread(new SocketReader(inFromServer, socketConnectionAdapter));
             reader.start();
 
-            while(socket.isConnected()) {
+            while(socket.isConnected() && readerIsConnected) {
                 // Only check at refresh rate
                 Thread.sleep(1000 / 60, 0);
                 synchronized (socketConnectionAdapter.getCommandList()) {
@@ -72,12 +74,16 @@ public class RoboClient implements Runnable {
                 while(true) {
                     char[] buffer = new char[5];
                     int response = reader.read(buffer);
+                    if(response < 0) {
+                        break;
+                    }
                     Log.d(ControlActivity.TAG,
                             "Read from server: " + response + " : " + String.valueOf(buffer));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            readerIsConnected = false;
         }
     }
 
