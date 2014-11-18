@@ -55,6 +55,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         offButton = (Button) findViewById(R.id.off_button);
         addressEditText = (EditText) findViewById(R.id.address_edit_text);
 
+        leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView);
         bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView);
 
@@ -110,12 +112,23 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     }
 
     private void bindSeekbarToTextView(final SeekBar seekBar, final TextView textView) {
+        seekBar.setEnabled(false);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            private int position = 0;
+            private int position = translateMotorToSeekbar(0);
+            private int lastPosition = translateMotorToSeekbar(0);
             public void onStartTrackingTouch(SeekBar seekBar) {}
             public void onStopTrackingTouch(SeekBar seekBar) {
+                /* The motor can't pass through zero */
+                if(lastPosition != translateMotorToSeekbar(0) &&
+                        (Math.signum(translateSeekbarToMotor(lastPosition))
+                        != Math.signum(translateSeekbarToMotor(position)))) {
+                    position = translateMotorToSeekbar(0);
+                    ((VerticalSeekBar)seekBar).setProgressAndThumb(position);
+                }
+
                 textView.setText(Integer.toString(translateSeekbarToMotor(position)));
                 // TODO: Send motor value to server
+                lastPosition = position;
             }
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 position = i;
@@ -170,6 +183,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
             leftMotorSeekbar.setEnabled(true);
             rightMotorTextView.setEnabled(true);
             rightMotorSeekbar.setEnabled(true);
+            leftMotorTextView.setText("0");
+            rightMotorTextView.setText("0");
         }
     }
 
