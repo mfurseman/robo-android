@@ -130,7 +130,9 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
                 }
 
                 textView.setText(Integer.toString(translateSeekbarToMotor(position)));
-                commands.add(commandId + (char)seekBar.getProgress());
+                synchronized (commands) {
+                    commands.add(commandId + (char) seekBar.getProgress());
+                }
                 lastPosition = position;
             }
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -140,14 +142,18 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     }
 
     private void coast() {
-        commands.add("gh");
+        synchronized (commands) {
+            commands.add("gh");
+        }
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
     }
 
     private void stop() {
         char brakePower = (char)stopMotorSeekbar.getProgress();
-        commands.add("i" + brakePower + "j" + brakePower);
+        synchronized (commands) {
+            commands.add("i" + brakePower + "j" + brakePower);
+        }
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
     }
@@ -159,11 +165,15 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     }
 
     private void setOnBoardLedOn() {
-        commands.add("b");
+        synchronized (commands) {
+            commands.add("b");
+        }
     }
 
     private void setOnBoardLedOff() {
-        commands.add("c");
+        synchronized (commands) {
+            commands.add("c");
+        }
     }
 
     private int translateSeekbarToMotor(int seekbar) {
