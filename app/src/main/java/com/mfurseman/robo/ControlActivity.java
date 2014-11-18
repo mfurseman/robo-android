@@ -21,6 +21,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     public static final String TAG = "Robo";
 
     private ArrayList<String> commands = new ArrayList<String>();
+    private ArrayList<String> received = new ArrayList<String>();
     private OnConnection onConnection;
     private OnCommandReceived onCommandReceived;
     private Handler handler;
@@ -205,10 +206,37 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         }
     }
 
+    private class OnDisconnection implements Runnable {
+        @Override
+        public void run() {
+            addressEditText.setEnabled(true);
+            connectButton.setEnabled(true);
+            onButton.setEnabled(false);
+            offButton.setEnabled(false);
+            coastButton.setEnabled(false);
+            stopButton.setEnabled(false);
+            leftMotorTextView.setEnabled(false);
+            leftMotorSeekbar.setEnabled(false);
+            rightMotorTextView.setEnabled(false);
+            rightMotorSeekbar.setEnabled(false);
+            stopMotorSeekbar.setEnabled(false);
+            leftMotorTextView.setText("0");
+            rightMotorTextView.setText("0");
+            leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+            rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        }
+    }
+
     private class OnCommandReceived implements Runnable {
         @Override
         public void run() {
-            // TODO: Something with the received commands
+            while(!received.isEmpty()) {
+                String command;
+                synchronized (received) {
+                    command = received.remove(0);
+                }
+                // TODO: Something with the received data
+            }
         }
     }
 
@@ -226,6 +254,11 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     }
 
     @Override
+    public Runnable getOnDisconnection() {
+        return null;
+    }
+
+    @Override
     public Runnable getOnCommandReceived() {
         if(onCommandReceived == null) {
             onCommandReceived = new OnCommandReceived();
@@ -236,5 +269,10 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     @Override
     public List<String> getCommandList() {
         return commands;
+    }
+
+    @Override
+    public List<String> getReceivedList() {
+        return received;
     }
 }

@@ -56,6 +56,7 @@ public class RoboClient implements Runnable {
             Log.w(ControlActivity.TAG, "Disconnected");
             e.printStackTrace();
         }
+        socketConnectionAdapter.getHandler().post(socketConnectionAdapter.getOnDisconnection());
     }
 
     class SocketReader implements Runnable {
@@ -79,6 +80,11 @@ public class RoboClient implements Runnable {
                     }
                     Log.d(ControlActivity.TAG,
                             "Read from server: " + response + " : " + String.valueOf(buffer));
+                    synchronized (socketConnectionAdapter.getReceivedList()) {
+                        socketConnectionAdapter.getReceivedList().add(new String(buffer));
+                    }
+                    socketConnectionAdapter.getHandler().post(
+                            socketConnectionAdapter.getOnCommandReceived());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
