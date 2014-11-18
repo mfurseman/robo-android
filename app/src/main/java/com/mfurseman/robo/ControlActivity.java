@@ -59,6 +59,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView);
         bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView);
+        stopMotorSeekbar.setEnabled(false);
 
         coastButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -185,6 +186,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
             rightMotorSeekbar.setEnabled(true);
             leftMotorTextView.setText("0");
             rightMotorTextView.setText("0");
+            stopMotorSeekbar.setEnabled(true);
         }
     }
 
