@@ -52,7 +52,9 @@ public class VerticalSeekBar extends SeekBar {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                onChangeListener.onStartTrackingTouch(this);
+                if(onChangeListener != null) {
+                    onChangeListener.onStartTrackingTouch(this);
+                }
                 setPressed(true);
                 setSelected(true);
                 break;
@@ -67,7 +69,9 @@ public class VerticalSeekBar extends SeekBar {
                 if(progress != lastProgress) {
                     // Only enact listener if the progress has actually changed
                     lastProgress = progress;
-                    onChangeListener.onProgressChanged(this, progress, true);
+                    if(onChangeListener != null) {
+                        onChangeListener.onProgressChanged(this, progress, true);
+                    }
                 }
 
                 onSizeChanged(getWidth(), getHeight() , 0, 0);
@@ -75,7 +79,9 @@ public class VerticalSeekBar extends SeekBar {
                 setSelected(true);
                 break;
             case MotionEvent.ACTION_UP:
-                onChangeListener.onStopTrackingTouch(this);
+                if(onChangeListener != null) {
+                    onChangeListener.onStopTrackingTouch(this);
+                }
                 setPressed(false);
                 setSelected(false);
                 break;
@@ -94,7 +100,9 @@ public class VerticalSeekBar extends SeekBar {
         if(progress != lastProgress) {
             // Only enact listener if the progress has actually changed
             lastProgress = progress;
-            onChangeListener.onProgressChanged(this, progress, true);
+            if(onChangeListener != null) {
+                onChangeListener.onProgressChanged(this, progress, true);
+            }
         }
     }
 
