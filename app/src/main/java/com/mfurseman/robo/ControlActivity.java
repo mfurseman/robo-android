@@ -156,6 +156,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         }
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
+        leftMotorTextView.setText("0");
+        rightMotorTextView.setText("0");
     }
 
     private void connect() {
@@ -197,9 +199,9 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
             leftMotorSeekbar.setEnabled(true);
             rightMotorTextView.setEnabled(true);
             rightMotorSeekbar.setEnabled(true);
+            stopMotorSeekbar.setEnabled(true);
             leftMotorTextView.setText("0");
             rightMotorTextView.setText("0");
-            stopMotorSeekbar.setEnabled(true);
         }
     }
 
