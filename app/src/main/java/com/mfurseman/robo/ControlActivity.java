@@ -28,6 +28,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     /* Bind Android views to local variables */
     private VerticalSeekBar leftMotorSeekbar;
     private VerticalSeekBar rightMotorSeekbar;
+    private VerticalSeekBar stopMotorSeekbar;
     private TextView leftMotorTextView;
     private TextView rightMotorTextView;
     private Button coastButton;
@@ -44,6 +45,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
 
         leftMotorSeekbar = (VerticalSeekBar) findViewById(R.id.left_motor_seekbar);
         rightMotorSeekbar = (VerticalSeekBar) findViewById(R.id.right_motor_seekbar);
+        stopMotorSeekbar = (VerticalSeekBar) findViewById(R.id.stop_motor_seekbar);
         leftMotorTextView = (TextView)  findViewById(R.id.left_motor_textview);
         rightMotorTextView = (TextView) findViewById(R.id.right_motor_textview);
         coastButton = (Button) findViewById(R.id.coast_button);
