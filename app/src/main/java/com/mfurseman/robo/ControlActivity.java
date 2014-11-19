@@ -20,8 +20,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
 
     public static final String TAG = "Robo";
 
-    private ArrayList<String> commands = new ArrayList<String>();
-    private ArrayList<String> received = new ArrayList<String>();
+    private final ArrayList<String> commands = new ArrayList<String>();
+    private final ArrayList<String> received = new ArrayList<String>();
     private OnConnection onConnection;
     private OnDisconnection onDisconnection;
     private OnCommandReceived onCommandReceived;
@@ -39,6 +39,10 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     private Button onButton;
     private Button offButton;
     private EditText addressEditText;
+
+    /* Bind seekbar listeners to local variables */
+    private CustomOnSeekBarChangeListener leftMotorSeekBarChangeListener;
+    private CustomOnSeekBarChangeListener rightMotorSeekBarChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,10 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
 
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
-        bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView, "e");
-        bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView, "f");
+        leftMotorSeekBarChangeListener =
+                bindSeekbarToTextView(leftMotorSeekbar, leftMotorTextView, "e", "g");
+        rightMotorSeekBarChangeListener =
+                bindSeekbarToTextView(rightMotorSeekbar, rightMotorTextView, "f", "h");
         stopMotorSeekbar.setEnabled(false);
 
         coastButton.setOnClickListener(new View.OnClickListener() {
@@ -114,33 +120,57 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         return super.onOptionsItemSelected(item);
     }
 
-    private void bindSeekbarToTextView(
-            final VerticalSeekBar seekBar, final TextView textView, final String commandId) {
+    private CustomOnSeekBarChangeListener bindSeekbarToTextView(final VerticalSeekBar seekBar,
+                     final TextView textView, final String motorDutyId, final String motorCoastId) {
         seekBar.setEnabled(false);
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        CustomOnSeekBarChangeListener listener = new CustomOnSeekBarChangeListener() {
             private int position = translateMotorToSeekbar(0);
             private int lastPosition = translateMotorToSeekbar(0);
-            public void onStartTrackingTouch(SeekBar seekBar) {}
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                /* The motor can't pass through zero */
-                if(lastPosition != translateMotorToSeekbar(0) &&
-                        (Math.signum(translateSeekbarToMotor(lastPosition))
-                        != Math.signum(translateSeekbarToMotor(position)))) {
-                    position = translateMotorToSeekbar(0);
-                    ((VerticalSeekBar)seekBar).setProgressAndThumb(position);
-                }
 
-                textView.setText(Integer.toString(translateSeekbarToMotor(position)));
-                synchronized (commands) {
-                    commands.add(commandId + (char) seekBar.getProgress());
-                }
-                lastPosition = position;
+            @Override
+            public void zero() {
+                lastPosition = translateMotorToSeekbar(0);
+                position = translateMotorToSeekbar(0);
             }
+
+            @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 position = i;
             }
-        });
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                /* The motor can't pass through zero */
+                if (swapped(position, lastPosition)) {
+                    position = translateMotorToSeekbar(0);
+                    ((VerticalSeekBar) seekBar).setProgressAndThumb(position);
+                    synchronized (commands) {
+                        commands.add(motorCoastId);
+                    }
+                } else {
+                    synchronized (commands) {
+                        commands.add(motorDutyId + (char) seekBar.getProgress());
+                    }
+                }
+                textView.setText(Integer.toString(translateSeekbarToMotor(position)));
+                lastPosition = position;
+            }
+
+            private boolean swapped(int position, int lastPosition) {
+                int zero = translateMotorToSeekbar(0);
+                if ((lastPosition < zero && position > zero)
+                        || (lastPosition > zero && position < zero)) {
+                    return true;
+                }
+                return false;
+            }
+        };
+        seekBar.setOnSeekBarChangeListener(listener);
+        return listener;
     }
 
     private void coast() {
@@ -185,10 +215,16 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     }
 
     private void zeroSeekbar() {
+        leftMotorSeekBarChangeListener.zero();
+        rightMotorSeekBarChangeListener.zero();
         leftMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         rightMotorSeekbar.setProgressAndThumb(translateMotorToSeekbar(0));
         leftMotorTextView.setText("0");
         rightMotorTextView.setText("0");
+    }
+
+    private abstract class CustomOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+        public abstract void zero();
     }
 
     private class OnConnection implements Runnable {
