@@ -162,11 +162,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
 
             private boolean swapped(int position, int lastPosition) {
                 int zero = translateMotorToSeekbar(0);
-                if ((lastPosition < zero && position > zero)
-                        || (lastPosition > zero && position < zero)) {
-                    return true;
-                }
-                return false;
+                return (lastPosition < zero && position > zero)
+                        || (lastPosition > zero && position < zero);
             }
         };
         seekBar.setOnSeekBarChangeListener(listener);
@@ -267,9 +264,8 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
         @Override
         public void run() {
             while(!received.isEmpty()) {
-                String command;
                 synchronized (received) {
-                    command = received.remove(0);
+                    received.remove(0);
                 }
                 // TODO: Something with the received data
             }
