@@ -23,6 +23,7 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
     private ArrayList<String> commands = new ArrayList<String>();
     private ArrayList<String> received = new ArrayList<String>();
     private OnConnection onConnection;
+    private OnDisconnection onDisconnection;
     private OnCommandReceived onCommandReceived;
     private Handler handler;
 
@@ -254,7 +255,10 @@ public class ControlActivity extends Activity implements SocketConnectionAdapter
 
     @Override
     public Runnable getOnDisconnection() {
-        return null;
+        if(onDisconnection == null) {
+            onDisconnection = new OnDisconnection();
+        }
+        return onDisconnection;
     }
 
     @Override
